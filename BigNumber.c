@@ -38,6 +38,40 @@ struct BigNumber * init(int sign, char * number) {
   return bignumber;
 }
 
+struct BigNumber * add(struct BigNumber * bignumber1, struct BigNumber * bignumber2) {
+  int temp_wordcount = (bignumber1->wordcount > bignumber2->wordcount ? bignumber1->wordcount : bignumber2->wordcount) + 1;
+  int temp_bignumber1_words[temp_wordcount];
+  int temp_bignumber2_words[temp_wordcount];
+
+  int i, result_words[temp_wordcount];
+  for( i = 0 ; i < temp_wordcount ; ++i ) {
+    temp_bignumber1_words[i] = 0;
+    temp_bignumber2_words[i] = 0;
+    result_words[i] = 0;
+  }
+  for( i = 0 ; i < bignumber1->wordcount ; ++i )
+    temp_bignumber1_words[i] = bignumber1->words[i];
+  for( i = 0 ; i < bignumber2->wordcount ; ++i )
+    temp_bignumber2_words[i] = bignumber2->words[i];
+
+  for( i = 0 ; i < temp_wordcount ; ++i ) {
+    result_words[i] = result_words[i] + temp_bignumber1_words[i] + temp_bignumber2_words[i];
+    if(result_words[i] > 999999999) {
+      result_words[i+1]++;
+      result_words[i] %= 1000000000;
+    }
+  }
+  if(result_words[temp_wordcount - 1] == 0)
+    temp_wordcount--;
+
+  struct BigNumber * bigsum = malloc(sizeof(struct BigNumber) + temp_wordcount * sizeof(int));
+  bigsum->sign = 0;
+  bigsum->wordcount = temp_wordcount;
+  for( i = 0 ; i < temp_wordcount ; ++i )
+    bigsum->words[i] = result_words[i];
+  return bigsum;
+}
+
 void printBigNumber(struct BigNumber * bignumber) {
   if(bignumber->wordcount == 1 && bignumber->words[0] == 0)
     printf("0\n");
@@ -62,7 +96,9 @@ void printBigNumber(struct BigNumber * bignumber) {
 }
 
 int main() {
-  struct BigNumber * test = init(0, "42");
-  printBigNumber(test);
+  struct BigNumber * test = init(0, "83489438943793443");
+  struct BigNumber * test2 = init(0, "345876578269523698");
+  struct BigNumber * test3 = add(test, test2);
+  printBigNumber(test3);
   return 0;
 }
