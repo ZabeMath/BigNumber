@@ -1,3 +1,7 @@
-compile with
+Run with
 
-gcc BigNumber.c -lm
+```bash
+make
+
+./BigNumber
+```
