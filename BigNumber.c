@@ -13,7 +13,7 @@ int intpow( int a, int b ) {
 struct BigNumber {
   int sign; // 0 = plus ; 1 = minus
   int wordcount;
-  int words[]; //each word contains 9 decimal place of the number.
+  int words[]; // each word contains 9 decimal place of the number.
 };
 
 struct BigNumber * init( int sign, char * number ) {
@@ -84,7 +84,7 @@ void printBigNumber( struct BigNumber * bignumber ) {
     for ( i = bignumber->wordcount - 2 ; i >= 0 ; --i ) {
       char temp2[9];
       sprintf( temp2, "%d", bignumber->words[i] );
-      int word_len = strlen(temp2);
+      int word_len = strlen( temp2 );
       for ( j = 0 ; j < word_len ; ++j )
         temp2[j + 9 - word_len] = temp2[j];
       for ( j = 0 ; j < 9 - word_len ; ++j )
@@ -95,10 +95,26 @@ void printBigNumber( struct BigNumber * bignumber ) {
   }
 }
 
+int fibonacci( int n ) {
+  if ( n < 3 ) {
+    printf("1\n");
+    return 0;
+  }
+
+  struct BigNumber * start = init( 0, "1" );
+  struct BigNumber * start2 = init( 0, "1" );
+  struct BigNumber * sum = add( start, start2 );
+
+  for ( int i = 1 ; i < n - 2 ; ++i ) {
+    start = start2;
+    start2 = sum;
+    sum = add( start, start2 );
+  }
+
+  printBigNumber( sum );
+}
+
 int main() {
-  struct BigNumber * test = init( 0, "83489438943793443" );
-  struct BigNumber * test2 = init( 0, "345876578269523698" );
-  struct BigNumber * test3 = add( test, test2 );
-  printBigNumber( test3 );
+  fibonacci( 100000 );
   return 0;
 }
